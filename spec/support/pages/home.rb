@@ -13,6 +13,10 @@ module Pages
     def has_app_name?
       page.has_content?('MovieRama')
     end
+
+    def has_movie?(title)
+      page.has_css?('.mr-movie', text: title)
+    end
   end
 end
 
