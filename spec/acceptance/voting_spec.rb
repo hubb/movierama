@@ -11,7 +11,8 @@ RSpec.describe 'vote on movies', type: :feature do
   before do
     author = User.create(
       uid:  'null|12345',
-      name: 'Bob'
+      name: 'Bob',
+      email: 'bob@test.dev'
     )
     Movie.create(
       title:        'Empire strikes back',
@@ -35,14 +36,28 @@ RSpec.describe 'vote on movies', type: :feature do
 
     before { page.open }
 
-    it 'can like' do
-      page.like('Empire strikes back')
-      expect(page).to have_vote_message
+    context 'liking a movie' do
+      it 'shows a message' do
+        page.like('Empire strikes back')
+        expect(page).to have_vote_message
+      end
+
+      it 'sends an email to the poster' do
+        expect { page.like('Empire strikes back') }
+          .to change { ActionMailer::Base.deliveries.size }.by(1)
+      end
     end
 
-    it 'can hate' do
-      page.hate('Empire strikes back')
-      expect(page).to have_vote_message
+    context 'hating a movie' do
+      it 'shows a message' do
+        page.hate('Empire strikes back')
+        expect(page).to have_vote_message
+      end
+
+      it 'sends an email to the poster' do
+        expect { page.hate('Empire strikes back') }
+          .to change { ActionMailer::Base.deliveries.size }.by(1)
+      end
     end
 
     it 'can unlike' do

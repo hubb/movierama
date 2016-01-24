@@ -7,6 +7,12 @@ require './config/environment'
 
 srand(21378)
 
+class Nope
+  def method_missing(*args)
+    Nope.new
+  end
+end
+
 # Clear all records
 Ohm.redis.call 'FLUSHDB'
 
@@ -29,8 +35,8 @@ Movie.all.each do |movie|
   User.all.each do |user|
     next if movie.user == user
     case rand(4)
-    when 0 then VotingBooth.new(user, movie).vote(:like)
-    when 1 then VotingBooth.new(user, movie).vote(:hate)
+    when 0 then VotingBooth.new(user, movie, Nope.new).vote(:like)
+    when 1 then VotingBooth.new(user, movie, Nope.new).vote(:hate)
     end
   end
 end

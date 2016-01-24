@@ -1,22 +1,26 @@
 # Cast or withdraw a vote on a movie
 class VotingBooth
-  def initialize(user, movie)
-    @user  = user
-    @movie = movie
+  CASTING = {
+    like: { set: :likers, email: :movie_liker },
+    hate: { set: :haters, email: :movie_hater },
+  }
+
+  def initialize(user, movie, notifier = UserMailer)
+    @user     = user
+    @movie    = movie
+    @notifier = notifier
   end
 
   def vote(like_or_hate)
-    set = case like_or_hate
-      when :like then @movie.likers
-      when :hate then @movie.haters
-      else raise
-    end
+    cast = CASTING.fetch(like_or_hate)
     unvote # to guarantee consistency
-    set.add(@user)
+    _set = cast[:set].to_proc
+    _set.call(@movie).add(@user)
     _update_counts
+    _notify_poster(cast[:email])
     self
   end
-  
+
   def unvote
     @movie.likers.delete(@user)
     @movie.haters.delete(@user)
@@ -30,5 +34,9 @@ class VotingBooth
     @movie.update(
       liker_count: @movie.likers.size,
       hater_count: @movie.haters.size)
+  end
+
+  def _notify_poster(email)
+    @notifier.public_send(email, user: @user, movie: @movie).deliver_now
   end
 end

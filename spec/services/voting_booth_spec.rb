@@ -1,9 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe VotingBooth, type: :service do
-  let(:user) { User.new(id: 'dev|1') }
-  let(:movie) { Movie.new(id: '1') }
-  subject(:voter) { described_class.new(user, movie) }
+  let(:user)      { User.new(id: 'dev|1', email: 'user@test.dev') }
+  let(:poster)    { User.new(id: 'dev|1', email: 'poster@test.dev') }
+  let(:movie)     { Movie.new(id: '1', user: poster) }
+  let(:notifier)  { double.as_null_object }
+  subject(:voter) { described_class.new(user, movie, notifier) }
 
   describe 'vote' do
     let(:cast_vote) { voter.vote(like_or_hate) }
@@ -21,6 +23,18 @@ RSpec.describe VotingBooth, type: :service do
 
       it 'should change liker_count to 1' do
         expect { cast_vote }.to change { movie.liker_count }.to(1)
+      end
+
+      it 'should send a movie liker email' do
+        allow(movie).to receive(:user).and_return(user)
+        email = double.as_null_object
+        expect(notifier)
+          .to receive(:movie_liker)
+          .with(user: user, movie: movie)
+          .and_return(email)
+        expect(email).to receive(:deliver_now)
+
+        cast_vote
       end
 
       context 'user has already voted' do
@@ -49,6 +63,18 @@ RSpec.describe VotingBooth, type: :service do
 
       it 'should change liker_count to 0' do
         expect { cast_vote }.to change { movie.liker_count }.to(0)
+      end
+
+      it 'should send a movie hater email' do
+        allow(movie).to receive(:user).and_return(user)
+        email = double.as_null_object
+        expect(notifier)
+          .to receive(:movie_hater)
+          .with(user: user, movie: movie)
+          .and_return(email)
+        expect(email).to receive(:deliver_now)
+
+        cast_vote
       end
     end
 
