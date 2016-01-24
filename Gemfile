@@ -58,6 +58,9 @@ gem 'pry'
 gem 'pry-nav'
 gem 'pry-doc'
 
+# Queue
+gem 'sidekiq'
+
 
 group :test do
   gem 'guard-rspec'    # Continuous testing

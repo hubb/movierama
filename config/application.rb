@@ -27,5 +27,6 @@ module Movierama
     # config.i18n.default_locale = :de
 
     config.action_mailer.default_url_options = { host: 'movierama.dev' }
+    config.active_job.queue_adapter = :sidekiq
   end
 end
