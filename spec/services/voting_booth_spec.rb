@@ -32,7 +32,7 @@ RSpec.describe VotingBooth, type: :service do
           .to receive(:movie_liker)
           .with(user: user, movie: movie)
           .and_return(email)
-        expect(email).to receive(:deliver_now)
+        expect(email).to receive(:deliver_later)
 
         cast_vote
       end
@@ -72,7 +72,7 @@ RSpec.describe VotingBooth, type: :service do
           .to receive(:movie_hater)
           .with(user: user, movie: movie)
           .and_return(email)
-        expect(email).to receive(:deliver_now)
+        expect(email).to receive(:deliver_later)
 
         cast_vote
       end

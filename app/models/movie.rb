@@ -1,5 +1,7 @@
 class Movie < BaseModel
   include Ohm::Timestamps
+  include GlobalID::Identification
+  extend GlobalIdFriendlyFinder
 
   attribute :title
   attribute :date

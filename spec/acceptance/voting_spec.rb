@@ -3,6 +3,7 @@ require 'capybara/rails'
 require 'support/pages/movie_list'
 require 'support/pages/movie_new'
 require 'support/with_user'
+require 'sidekiq/testing'
 
 RSpec.describe 'vote on movies', type: :feature do
 
@@ -43,8 +44,10 @@ RSpec.describe 'vote on movies', type: :feature do
       end
 
       it 'sends an email to the poster' do
-        expect { page.like('Empire strikes back') }
-          .to change { ActionMailer::Base.deliveries.size }.by(1)
+        Sidekiq::Testing.inline! do
+          expect { page.like('Empire strikes back') }
+            .to change { ActionMailer::Base.deliveries.size }.by(1)
+        end
       end
     end
 
@@ -55,8 +58,10 @@ RSpec.describe 'vote on movies', type: :feature do
       end
 
       it 'sends an email to the poster' do
-        expect { page.hate('Empire strikes back') }
-          .to change { ActionMailer::Base.deliveries.size }.by(1)
+        Sidekiq::Testing.inline! do
+          expect { page.hate('Empire strikes back') }
+            .to change { ActionMailer::Base.deliveries.size }.by(1)
+        end
       end
     end
 

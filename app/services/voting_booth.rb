@@ -37,6 +37,7 @@ class VotingBooth
   end
 
   def _notify_poster(email)
-    @notifier.public_send(email, user: @user, movie: @movie).deliver_now
+    _user = @user.is_a?(UserDecorator) ? @user.object : @user
+    @notifier.public_send(email, user: _user, movie: @movie).deliver_later
   end
 end

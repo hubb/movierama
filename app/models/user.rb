@@ -1,5 +1,7 @@
 class User < BaseModel
   include Ohm::Timestamps
+  include GlobalID::Identification
+  extend GlobalIdFriendlyFinder
 
   attribute :name
   attribute :email
