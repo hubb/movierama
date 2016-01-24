@@ -6,7 +6,7 @@ RSpec.describe UserRegistration, type: :service do
     {
       provider: 'dev',
       uid: '12345',
-      info: { name: 'John McFoo' }
+      info: { name: 'John McFoo', email: 'john@mcfoo.dev' }
     }.stringify_keys
   }
 
