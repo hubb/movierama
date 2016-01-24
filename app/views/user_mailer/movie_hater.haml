@@ -1,0 +1,7 @@
+%h1
+  #{ @user.name } just hated #{ @movie.title } on #{ link_to(root_url, 'Movierama') }
+
+%p
+  = link_to(root_url(user_id: @user.id), "Find out how #{ @movie.title } compares to the other movies you submitted")
+%p
+  See you soon on #{ link_to(root_url, 'Movierama!') }

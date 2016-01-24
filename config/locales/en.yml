@@ -20,4 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  user_mailer:
+    movie_hater:
+      subject: Someone just hated a movie you posted!
+    movie_liker:
+      subject: Someone just liked a movie you posted!

@@ -1,0 +1,5 @@
+<%= @user.name %> just liked <%= @movie.title %>, that makes <%= @movie.count_likers %> of them now!
+
+<%= link_to(root_url(user_id: @user.id), "Find out how #{ @movie.title } compares to the other movies you submitted") %>
+
+See you soon on <%= link_to(root_url, 'Movierama!') %>
